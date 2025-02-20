@@ -228,6 +228,16 @@ module ImHelpers
       gsub(/&(#?)(.+?);/, '')
     end
 
+    def sanitize_html_for_prawn
+      fragment = Nokogiri::HTML::DocumentFragment.parse(self)
+      fragment.traverse do |node|
+        if node.element? && !%w[em b].include?(node.name)
+          node.replace(node.text)
+        end
+      end
+      fragment.to_html
+    end
+
   end
 
   module TranslationHelpers
